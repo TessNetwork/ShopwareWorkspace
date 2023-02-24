@@ -1,0 +1,18 @@
+{
+    "name": "Shopware",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "SHOPWARE_VERSION": "6.4.18.1"
+        }
+    },
+    "forwardPorts": [8000],
+    // "postCreateCommand": "mix deps.get",
+    "postAttachCommand": {
+        "server": "symfony server:start --no-tls"
+    },
+    "remoteUser": "vscode",
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {}
+	}
+}
