@@ -1,11 +1,6 @@
 {
-    "name": "Shopware",
-    "build": {
-        "dockerfile": "Dockerfile",
-        "args": {
-            "SHOPWARE_VERSION": "6.4.18.1"
-        }
-    },
+    "name": "Shopware (Pre-Build)",
+    "image": "ghcr.io/tessnetwork/shopwareworkspace:6.4.18.1",
     "forwardPorts": [8000],
     "remoteUser": "vscode",
     "features": {

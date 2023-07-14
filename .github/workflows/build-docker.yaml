@@ -1,0 +1,28 @@
+name: 🐳 Build Docker
+
+on:
+  workflow_dispatch:
+    inputs:
+      shopwareVersion:
+        description: 'Shopware Version'
+        required: true
+        default: '6.4.18.1'
+        type: string
+
+env:
+  IMAGE_NAME: ghcr.io/tessnetwork/shopwareworkspace
+
+jobs:
+  build:
+    env:
+      SHOPWARE_VERSION: ${{ inputs.shopwareVersion }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵️ Checkout
+        uses: actions/checkout@v1
+      - name: 🔐 Login to GitHub Container Registry
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $ --password-stdin
+      - name: 🚧 Build the Docker image
+        run: docker build .devcontainer/ -t ${IMAGE_NAME}:${SHOPWARE_VERSION} -f .devcontainer/Dockerfile --build-arg=SHOPWARE_VERSION=${SHOPWARE_VERSION}
+      - name: ⤴️ Push the Docker image to GitHub Container Registry
+        run: docker push ${IMAGE_NAME}:${SHOPWARE_VERSION}
