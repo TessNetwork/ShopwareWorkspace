@@ -7,12 +7,10 @@
         }
     },
     "forwardPorts": [8000],
-    // "postCreateCommand": "mix deps.get",
-    "postAttachCommand": {
-        "server": "symfony server:start --no-tls"
-    },
     "remoteUser": "vscode",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {}
-	}
+	},
+    "workspaceMount": "source=${localWorkspaceFolder},target=/shopware/custom/plugins/tessAnalytics,type=bind,consistency=cached",
+    "workspaceFolder": "/shopware"
 }

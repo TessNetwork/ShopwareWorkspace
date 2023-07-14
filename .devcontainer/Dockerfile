@@ -1,5 +1,5 @@
 ARG PHP_VERSION=8.1
-FROM php:${PHP_VERSION}-cli
+FROM php:${PHP_VERSION}-apache
 
 ARG SHOPWARE_VERSION
 ARG USERNAME=vscode
@@ -21,8 +21,7 @@ RUN apt-get update && apt-get upgrade -y && \
     curl -sSL ${COMMON_SCRIPT_SOURCE} -o /tmp/common-setup.sh && \
     ([ "${COMMON_SCRIPT_SHA}" = "dev-mode" ] || (echo "${COMMON_SCRIPT_SHA} */tmp/common-setup.sh" | sha256sum -c -)) && \
     /bin/bash /tmp/common-setup.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" && \
-    # install database
-    apt-get -y install --no-install-recommends
+    # install database: not done yet
     # configure php
     apt-get -y install --no-install-recommends libzip-dev libpng-dev libicu-dev && \
     docker-php-ext-install gd intl zip pdo_mysql && \
