@@ -6,7 +6,8 @@
             "SHOPWARE_VERSION": "6.4.18.1"
         }
     },
-    "forwardPorts": [8000],
+    "postStartCommand": "/on-start.sh",
+    "forwardPorts": [80],
     "remoteUser": "vscode",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {}

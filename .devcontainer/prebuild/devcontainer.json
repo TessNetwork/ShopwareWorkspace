@@ -1,7 +1,7 @@
 {
     "name": "Shopware (Pre-Build)",
     "image": "ghcr.io/tessnetwork/shopwareworkspace:6.4.18.1",
-    "forwardPorts": [8000],
+    "forwardPorts": [80],
     "remoteUser": "vscode",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {}

@@ -14,6 +14,7 @@ ARG COMMON_SCRIPT_SHA="dev-mode"
 ENV SHOPWARE_ROOT="/shopware"
 ENV SHOPWARE_PUBLIC="/shopware/public"
 
+COPY conf/apache2-shopware.conf /etc/apache2/sites-available/shopware.conf
     # update image
 RUN apt-get update && apt-get upgrade -y && \
     export DEBIAN_FRONTEND=noninteractive && \
@@ -21,7 +22,13 @@ RUN apt-get update && apt-get upgrade -y && \
     curl -sSL ${COMMON_SCRIPT_SOURCE} -o /tmp/common-setup.sh && \
     ([ "${COMMON_SCRIPT_SHA}" = "dev-mode" ] || (echo "${COMMON_SCRIPT_SHA} */tmp/common-setup.sh" | sha256sum -c -)) && \
     /bin/bash /tmp/common-setup.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" && \
-    # install database: not done yet
+    # install database
+    apt-get -y install --no-install-recommends mariadb-server mariadb-client && \
+    mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld && \
+    # configure apache
+    a2dissite 000-default && a2ensite shopware && \
+    a2enmod rewrite headers && \
+    sed -i 's/www-data/${USER_UID}/' /etc/apache2/envvars && \
     # configure php
     apt-get -y install --no-install-recommends libzip-dev libpng-dev libicu-dev && \
     docker-php-ext-install gd intl zip pdo_mysql && \
@@ -45,6 +52,8 @@ RUN apt-get update && apt-get upgrade -y && \
     apt-get autoremove -y && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/common-setup.sh /tmp/node-setup.sh
+COPY on-start.sh /on-start.sh
+RUN chmod +x /on-start.sh
 
 ENV APP_ENV "dev"
 ENV APP_URL "http://127.0.0.1:8000"
